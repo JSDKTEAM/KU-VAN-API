@@ -12,3 +12,12 @@
 5. sequelize db:migrate
 6. node insertFirstData
 7. npm start
+
+## User Login
+| Username            | Password |
+| :------------------ | :------- |
+| team1234            | 1234     |
+| adminP1             | 1234     |
+| customer            | 1234     |
+
+localhost:9000/auth/login
