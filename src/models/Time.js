@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Time = sequelize.define("Time", {
+  let Time = sequelize.define("Time", {
     time_id: {
       type: Sequelize.INTEGER(11),
       allowNull: false,
@@ -12,6 +12,11 @@ module.exports = (sequelize, Sequelize) => {
       references: { model: 'Car', key: 'car_id' },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
+    },
+    count_seat:{
+      type: Sequelize.INTEGER(2),
+      allowNull: false,
+      defaultValue: 0
     },
     time_out: {
       type: Sequelize.STRING(10),
@@ -28,7 +33,8 @@ module.exports = (sequelize, Sequelize) => {
 
     Time.associate = (models) => {
       Time.hasMany(models.Reserve, {
-        as: 'times',
+        as: 'time',
+        foreignKey: 'time_id',
       });
     };
 

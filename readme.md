@@ -6,7 +6,9 @@
  
 ## Start project
 1. npm install
-2. sequelize db:migrate
-3. ถ้า sequelize db:migrate ไม่ได้พิมพ์ npm install -g sequelize-cli
-4. node insertFirstData
-5. npm start
+2. npm install -g nodemon
+3. npm install -g sequelize-cli
+4. เปิด xampp ไปที่กดปุ่ม config ของ MySQL เลือก my.ini หา lower_case_table_names  เปลี่ยนเป็นเท่ากับ 2 
+5. sequelize db:migrate
+6. node insertFirstData
+7. npm start
