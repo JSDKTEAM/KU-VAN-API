@@ -9,3 +9,4 @@
 2. sequelize db:migrate
 3. ถ้า sequelize db:migrate ไม่ได้พิมพ์ npm install -g sequelize-cli
 4. node insertFirstData
+5. npm start
