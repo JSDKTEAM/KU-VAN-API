@@ -16,6 +16,11 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
+      number_of_seats : {
+        type: Sequelize.INTEGER(2),
+        allowNull: false,
+        defaultValue: 15
+      },
       license_plate : {
         type: Sequelize.STRING(20),
         allowNull: false,
