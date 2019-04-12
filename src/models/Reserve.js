@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Reserve = sequelize.define("Reserve", {
+  let Reserve = sequelize.define("Reserve", {
     reserve_id : {
       type: Sequelize.INTEGER(11),
       allowNull: false,
@@ -45,7 +45,6 @@ module.exports = (sequelize, Sequelize) => {
   Reserve.associate = (models) => {
     Reserve.belongsTo(models.Time, {
       foreignKey: 'time_id',
-      onDelete: 'CASCADE',
     });
   };
   return Reserve;
