@@ -5,6 +5,17 @@ const jwt = require('jsonwebtoken');
 const db = require('../../src/database/connection');
 const User = db.User;
 
+exports.getUserAccount = async(req,res,next) => {
+    User.findOne({
+        where : {user_id : req.auth.user_id},
+        attributes : ['user_id','username','fname','lname','phoneNumber']
+    }).then(result => {
+        res.status(200).json(result);
+    })
+}
+
+
+
 exports.login = async (req, res, next) => {
     let user = await User.findOne({
         where: { username: req.body.username },

@@ -11,10 +11,12 @@ const cookieParser = require('cookie-parser')
 server.listen(port);
 
 //Router
+
 const authRouter = require('./api/routes/Auth');
 const portRouter = require('./api/routes/Port');
 const reserveRouter = require('./api/routes/Reserve');
 const timeRouter = require('./api/routes/Time');
+const timeDefault = require('./api/routes/TimeDefault');
 
 socketio.on('connection', (socket) => {
 
@@ -46,6 +48,7 @@ app.use((req, res, next) => {
 app.use('/auth',authRouter);
 app.use('/ports',portRouter);
 app.use('/times',timeRouter);
+app.use('/timesDefault',timeDefault);
 app.use('/reserves',reserveRouter);
 
 
