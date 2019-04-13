@@ -29,6 +29,14 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(200),
       allowNull: true,
     },
+    time_out: {
+      type: Sequelize.STRING(10),
+      allowNull: false,
+    },
+    date: {
+      type: Sequelize.DATE,
+      allowNull: false,
+    }
   }, {
       timestamps: false,
       freezeTableName: true

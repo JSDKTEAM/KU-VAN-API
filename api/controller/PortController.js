@@ -8,24 +8,31 @@ const Time = db.Time;
 const Port = db.Port;
 
 
-exports.getPortById = async (req, res, next) => {
-    // Port.hasMany(Car,{ foreignKey: 'car_id' });
-    // Car.hasMany(Time,{ foreignKey: 'car_id' });
+exports.getAllPort = async(req,res,next) => {
+    Port.findAll().then(result => {
+        res.json(result);
+    })
+};
 
-    // Port.findOne({
-    //     where : {port_id : req.body.port_id},
-    //     include : [
-    //         {
-    //             model : Car,
-    //             include : [
-    //                 {
-    //                     model : Time
-    //                 },
-    //             ]
-    //         },
-    //     ]
-    // }).then(result => {
-    //     res.json(result);
-    // })
+
+// exports.getPortById = async (req, res, next) => {
+//     // Port.hasMany(Car,{ foreignKey: 'car_id' });
+//     // Car.hasMany(Time,{ foreignKey: 'car_id' });
+
+//     // Port.findOne({
+//     //     where : {port_id : req.body.port_id},
+//     //     include : [
+//     //         {
+//     //             model : Car,
+//     //             include : [
+//     //                 {
+//     //                     model : Time
+//     //                 },
+//     //             ]
+//     //         },
+//     //     ]
+//     // }).then(result => {
+//     //     res.json(result);
+//     // })
     
-}
+// }

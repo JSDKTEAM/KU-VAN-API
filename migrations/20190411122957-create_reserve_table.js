@@ -39,6 +39,16 @@ module.exports = {
         type: Sequelize.STRING(200),
         allowNull: true,
       },
+      createdAt: {
+        type: 'TIMESTAMP',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+      },
+      updatedAt: {
+        type: 'TIMESTAMP',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+      }
     });
     /*
       Add altering commands here.
