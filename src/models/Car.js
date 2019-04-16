@@ -20,6 +20,11 @@ module.exports = (sequelize, Sequelize) => {
     province: {
       type: Sequelize.STRING(20),
       allowNull: false,
+    },
+    number_of_seats:{
+      type: Sequelize.INTEGER(2),
+      allowNull: false,
+      defaultValue: 15
     }
   }, {
       timestamps: false,
