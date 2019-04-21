@@ -113,7 +113,7 @@ exports.getReserveByTime = async (req, res, next) => {
     Reserve.belongsTo(User, { foreignKey: 'user_id' });
 
     Time.findOne({
-        where: { time_id: req.body.time_id },
+        where: { time_id: req.params.time_id },
         attributes: ['time_id','count_seat','time_out','date'],
         include: [
             {
