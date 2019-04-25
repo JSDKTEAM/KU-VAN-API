@@ -7,6 +7,7 @@ const Car = db.Car;
 const Time = db.Time;
 const Port = db.Port;
 
+
 exports.createReserve = async (req, res, next) => {
     let transaction;
     let result = null;
@@ -111,19 +112,22 @@ exports.getReserveByTime = async (req, res, next) => {
     Time.belongsTo(Car, { foreignKey: 'car_id' });
     Time.hasMany(Reserve, { foreignKey: 'time_id' });
     Reserve.belongsTo(User, { foreignKey: 'user_id' });
-
     Time.findOne({
         where: { time_id: req.params.time_id },
+        
         attributes: ['time_id','count_seat','time_out','date'],
         include: [
             {
                 model: Reserve,
+                separate: true,
+                order: [["createdAt","ASC"]],
                 include: [
                     { 
                         model: User,
                         attributes: ['user_id','username','fname','lname'],
                     }
-                ]
+                ],
+               
             },
             {
                 model: Car,
@@ -134,7 +138,8 @@ exports.getReserveByTime = async (req, res, next) => {
                     }
                 ]
             },
-        ]
+        ],
+        
     }).then(result => {
         res.status(200).json(result);
     })
@@ -147,6 +152,7 @@ exports.getReserveByPort =  async (req, res, next) => {
     Time.hasMany(Reserve, { foreignKey: 'time_id' });
     Time.belongsTo(Car, { foreignKey: 'car_id' });
     Reserve.findAll({
+        order: [["createdAt","ASC"]],
         include: [
             {
                 model: Time,

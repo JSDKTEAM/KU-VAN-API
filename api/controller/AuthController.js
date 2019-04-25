@@ -21,25 +21,29 @@ exports.login = async (req, res, next) => {
         where: { username: req.body.username },
     });
 
-    let { user_id, username, password, type_user } = user.dataValues;
-    let checkPwd = passwordHash.verify(req.body.password, password);
-    if (checkPwd) {
-        const token = jwt.sign({
-            user_id: user_id,
-            username: username,
-            type_user: type_user
-        }, process.env.JWT_KEY
-        )
-        return res.status(201).json({
-            message: "Autn successful",
-            token: token
-        });
-    }
-    else {
-        return res.status(401).json({
-            message: "username or password not corrent"
-        });
+
+    if (user) {
+
+        let { user_id, username, password, type_user } = user.dataValues;
+        let checkPwd = passwordHash.verify(req.body.password, password);
+        if (checkPwd) {
+            const token = jwt.sign({
+                user_id: user_id,
+                username: username,
+                type_user: type_user
+            }, process.env.JWT_KEY
+            )
+            return res.status(201).json({
+                message: "Autn successful",
+                token: token
+            });
+        }
+        else {
+            return res.status(401).json({
+                message: "username or password not corrent"
+            });
+        }
     }
 
-    next({ message: "username not corrent", status: 401 })
+    next({ message: "username or password not corrent", status: 401 })
 }
