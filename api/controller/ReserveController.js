@@ -55,6 +55,51 @@ exports.createReserve = async (req, res, next) => {
     res.status(201).json(result);
 }
 
+
+exports.getReserveByUserId = async(req,res,next) => {
+    Reserve.belongsTo(Time, { foreignKey: 'time_id' });
+    Time.belongsTo(Car, { foreignKey: 'car_id' });
+    Car.hasMany(Time, { foreignKey: 'car_id' });
+    let result = await Reserve.findAll({
+        where : {user_id:req.auth.user_id},
+        include : [
+            {
+                model : Time,
+                include : [
+                    {
+                        model : Car,
+                    }
+                ]
+            }
+        ]
+    })
+    
+    res.status(200).json(result);
+};
+
+exports.commentReserve = async (req, res, next) => {
+    let { reserve_id, comment } = req.body;
+    let result = null;
+    try {
+        transaction = await sequelize.transaction();
+        result = await Reserve.update({
+            comment: comment,
+        }, {
+                where: {
+                    reserve_id: reserve_id,
+                    user_id: req.auth.user_id
+                },
+                transaction
+            });
+        await transaction.commit();
+    }
+    catch (e) {
+        await transaction.rollback();
+        next(e);
+    }
+    res.status(200).json(result);
+}
+
 exports.cancelReserve = async (req, res, next) => {
     let transaction;
     let { time_id, reserve_id } = req.body;
@@ -114,54 +159,54 @@ exports.getReserveByTime = async (req, res, next) => {
     Reserve.belongsTo(User, { foreignKey: 'user_id' });
     Time.findOne({
         where: { time_id: req.params.time_id },
-        
-        attributes: ['time_id','count_seat','time_out','date'],
+
+        attributes: ['time_id', 'count_seat', 'time_out', 'date'],
         include: [
             {
                 model: Reserve,
                 separate: true,
-                order: [["createdAt","ASC"]],
+                order: [["createdAt", "ASC"]],
                 include: [
-                    { 
+                    {
                         model: User,
-                        attributes: ['user_id','username','fname','lname'],
+                        attributes: ['user_id', 'username', 'fname', 'lname'],
                     }
                 ],
-               
+
             },
             {
                 model: Car,
                 include: [
-                    { 
-                        model: Port ,
+                    {
+                        model: Port,
                         attributes: ['name'],
                     }
                 ]
             },
         ],
-        
+
     }).then(result => {
         res.status(200).json(result);
     })
 }
 
-exports.getReserveByPort =  async (req, res, next) => {
-    User.hasMany(Reserve,{ foreignKey: 'reserve_id' })
+exports.getReserveByPort = async (req, res, next) => {
+    User.hasMany(Reserve, { foreignKey: 'reserve_id' })
     Reserve.belongsTo(User, { foreignKey: 'user_id' });
     Reserve.belongsTo(Time, { foreignKey: 'time_id' });
     Time.hasMany(Reserve, { foreignKey: 'time_id' });
     Time.belongsTo(Car, { foreignKey: 'car_id' });
     Reserve.findAll({
-        order: [["createdAt","ASC"]],
+        order: [["createdAt", "ASC"]],
         include: [
             {
                 model: Time,
                 attributes: ['time_id'],
-                required:true,
+                required: true,
                 include: [
-                    { 
+                    {
                         model: Car,
-                        required:true,
+                        required: true,
                         where: { port_id: req.params.port_id },
                         // /attributes: ['port_id'],
                     }
@@ -169,7 +214,7 @@ exports.getReserveByPort =  async (req, res, next) => {
             },
             {
                 model: User,
-                attributes: ['user_id','username','fname','lname'],
+                attributes: ['user_id', 'username', 'fname', 'lname'],
             },
         ],
     }).then(result => {

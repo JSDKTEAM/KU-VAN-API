@@ -4,9 +4,9 @@ const controller = require('../controller/CarController');
 const checkAuth = require('../middleware/check-auth');
 
 router.get('/ports/:port_id',controller.getCarsByPortId);
-router.post('/',controller.createCarByPortId);
-router.delete('/',controller.deleteCar);
-router.put('/',controller.updateCar);
+router.post('/',checkAuth,controller.createCarByPortId);
+router.delete('/',checkAuth,controller.deleteCar);
+router.put('/',checkAuth,controller.updateCar);
 
 
 module.exports = router;

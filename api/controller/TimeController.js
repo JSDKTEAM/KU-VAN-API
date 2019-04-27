@@ -8,26 +8,65 @@ const moment = require('moment');
 
 
 exports.createTime = async (req, res, next) => {
-  let  times  = req.body.times;
+  let times = req.body.times;
   let result = null;
-  try {
-    if (times.length > 0) {
-      times.map(async (time) => {
-        result = await Time.create({
-          car_id: time.car_id,
-          time_out: time.time_out,
-          date: time.date
+  let transaction;
+  if (req.auth.type_user === "ADMIN") {
+    try {
+      transaction = await sequelize.transaction();
+      if (times.length > 0) {
+        times.map(async (time) => {
+          result = await Time.create({
+            car_id: time.car_id,
+            time_out: time.time_out,
+            date: time.date
+          }, { transaction });
         });
-      });
-      res.json(result);
+        await transaction.commit();
+        res.json(result);
+      }
+    }
+    catch (e) {
+      await transaction.rollback();
+      next(e);
     }
   }
-  catch (e) {
 
-  }
+  res.status(403).json({ "message": "can not use this action" });
 }
 
-exports.getAllTimes = async(req,res,next) => {
+exports.updateTime = async (req, res, next) => {
+
+}
+
+exports.deleteTime = async (req, res, next) => {
+  let transaction;
+  let { time_id } = req.body;
+  if (req.auth.type_user === "ADMIN") {
+    let result = null;
+    try {
+      transaction = await sequelize.transaction();
+
+      result = await Time.destroy(
+        {
+          where: {
+            time_id: time_id,
+          }, transaction
+        });
+
+      await transaction.commit();
+    } catch (e) {
+      await transaction.rollback();
+      next(e);
+    }
+    res.status(200).json(result);
+  }
+
+  res.status(403).json({ "message": "can not use this action" });
+
+}
+
+exports.getAllTimes = async (req, res, next) => {
   Time.belongsTo(Car, { foreignKey: 'car_id' })
   Car.belongsTo(Port, { foreignKey: 'port_id' })
   Time.findAll({
@@ -45,14 +84,13 @@ exports.getTimeByPortId = async (req, res, next) => {
   Time.belongsTo(Car, { foreignKey: 'car_id' })
   Car.belongsTo(Port, { foreignKey: 'port_id' })
   const dateWhere = moment(new Date()).format('YYYY-MM-DD');
-  console.log(dateWhere)
   Time.findAll({
-    where : {date : dateWhere},
+    where: { date: dateWhere },
     include: [
       {
         model: Car,
-        where: { 
-          port_id: req.params.port_id ,
+        where: {
+          port_id: req.params.port_id,
         },
       }
     ]

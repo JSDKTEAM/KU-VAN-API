@@ -3,6 +3,6 @@ const router = express.Router();
 const controller = require('../controller/PortController');
 const checkAuth = require('../middleware/check-auth');
 
-router.get('/',controller.getAllPort);
+router.get('/',checkAuth,controller.getAllPort);
 
 module.exports = router;
