@@ -4,6 +4,7 @@ const Time = db.Time;
 const Car = db.Car;
 const Port = db.Port;
 const sequelize = db.sequelize;
+const moment = require('moment');
 
 
 exports.createTime = async (req, res, next) => {
@@ -43,11 +44,16 @@ exports.getAllTimes = async(req,res,next) => {
 exports.getTimeByPortId = async (req, res, next) => {
   Time.belongsTo(Car, { foreignKey: 'car_id' })
   Car.belongsTo(Port, { foreignKey: 'port_id' })
+  const dateWhere = moment(new Date()).format('YYYY-MM-DD');
+  console.log(dateWhere)
   Time.findAll({
+    where : {date : dateWhere},
     include: [
       {
         model: Car,
-        where: { port_id: req.params.port_id },
+        where: { 
+          port_id: req.params.port_id ,
+        },
       }
     ]
   }).then(result => {

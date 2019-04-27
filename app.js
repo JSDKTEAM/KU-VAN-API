@@ -13,6 +13,7 @@ server.listen(port);
 //Router
 
 const authRouter = require('./api/routes/Auth');
+const userRouter = require('./api/routes/User');
 const carRouter = require('./api/routes/Car');
 const portRouter = require('./api/routes/Port');
 const reserveRouter = require('./api/routes/Reserve');
@@ -45,7 +46,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
+app.use('/users',userRouter);
 app.use('/cars',carRouter);
 app.use('/auth',authRouter);
 app.use('/ports',portRouter);

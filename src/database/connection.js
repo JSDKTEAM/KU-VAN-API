@@ -7,6 +7,10 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME
   host: 'localhost',
   dialect: 'mysql',
   operatorsAiases : false,
+  // dialectOptions: {
+  //   useUTC: false //for reading from database
+  // },
+  timezone: '+07:00' //for writing to database
 });
 
 const db = {};
