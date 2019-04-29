@@ -7,7 +7,7 @@ router.delete('/',checkAuthAdmin, controller.deleteTime);
 router.delete('/date/:date',checkAuthAdmin, controller.deleteTimeByDate);
 router.post('/',checkAuthAdmin, controller.createTime);
 router.get('/',checkAuthAdmin,controller.getAllTimes);
-router.get('/ports/:port_id', checkAuthAdmin,controller.getTimeByPortId);
+router.get('/ports/:port_id',controller.getTimeByPortId);
 router.get('/ports/:port_id/date/:date', checkAuthAdmin,controller.getTimeByPortIdAndByDate);
 
 module.exports = router;
