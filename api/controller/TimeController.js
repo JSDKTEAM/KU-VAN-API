@@ -10,23 +10,23 @@ const moment = require('moment');
 exports.createTime = async (req, res, next) => {
   let times = req.body.times;
   let result = null;
-  let transaction;
+  //let transaction;
   try {
-    transaction = await sequelize.transaction();
+   // transaction = await sequelize.transaction();
     if (times.length > 0) {
       times.map(async (time) => {
         result = await Time.create({
           car_id: time.car_id,
           time_out: time.time_out,
           date: time.date
-        }, { transaction });
+        });
       });
-      await transaction.commit();
-      res.json(result);
+      //await transaction.commit();
+      res.status(201).json(result);
     }
   }
   catch (e) {
-    await transaction.rollback();
+    //await transaction.rollback();
     next(e);
   }
   res.status(403).json({ "message": "can not use this action" });
