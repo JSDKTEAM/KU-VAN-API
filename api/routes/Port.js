@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controller/PortController');
-const checkAuth = require('../middleware/check-auth');
+const checkAuthAdmin = require('../middleware/check-auth-admin');
 
-router.get('/',checkAuth,controller.getAllPort);
+router.get('/',checkAuthAdmin,controller.getAllPort);
 
 module.exports = router;
