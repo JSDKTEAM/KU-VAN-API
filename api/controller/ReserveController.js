@@ -20,7 +20,6 @@ exports.createReserve = async (req, res, next) => {
                                           INNER JOIN Port ON Port.port_id = Car.port_id
                                           WHERE Time.time_id = ?`, { replacements: [req.body.time_id], type: sequelize.QueryTypes.SELECT });
         if (port.count_seat < port.number_of_seats) {
-            if (req.auth.type_user === "CUSTOMER") {
                 result = await Reserve.create({
                     time_id: time_id,
                     user_id: req.auth.user_id,
@@ -39,11 +38,6 @@ exports.createReserve = async (req, res, next) => {
                     time_id: time_id,
                     count_seat: port.count_seat
                 });
-
-            }
-            else {
-
-            }
         }
 
         await transaction.commit();
@@ -220,4 +214,25 @@ exports.getReserveByPort = async (req, res, next) => {
     }).then(result => {
         res.status(200).json(result);
     })
+}
+
+exports.updateIsCame = async (req, res, next) => {
+    let transaction;
+    let result = null;
+    try {
+        transaction = await sequelize.transaction();
+        let { reserve_id,isCame } = req.body;
+        result = await Reserve.update({
+            isCame: isCame
+        }, {
+            where: { reserve_id: reserve_id },
+            transaction
+        });
+        await transaction.commit();
+        res.status(200).json(result);
+    } catch (e) {
+        await transaction.rollback();
+        next(e);
+    }
+    res.status(200).json(result);
 }
