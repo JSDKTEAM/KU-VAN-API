@@ -32,6 +32,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(50),
       allowNull: true,
     },
+    isCame : {
+      type: Sequelize.BOOLEAN(),
+      defaultValue: false
+    },
     comment: {
       type: Sequelize.STRING(200),
       allowNull: true,

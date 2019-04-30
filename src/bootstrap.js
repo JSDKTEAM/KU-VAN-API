@@ -25,7 +25,7 @@ module.exports = async () => {
         fname : 'adminP1',
         lname : 'adminP1',
         password:'sha1$30ce46ff$1$b4790d8d39f2d27d04622f534decb80fa772b89f', //1234
-        type_user : 'CUSTOMER SUPPORT',
+        type_user : 'ADMIN',
         phoneNumber :"0890751882",
     });
 
