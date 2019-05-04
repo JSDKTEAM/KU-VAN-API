@@ -195,8 +195,8 @@ exports.getReserveByPort = async (req, res, next) => {
         include: [
             {
                 model: Time,
-                attributes: ['time_id'],
-                required: true,
+                attributes: ['time_id','time_out'],
+                required: false,
                 include: [
                     {
                         model: Car,

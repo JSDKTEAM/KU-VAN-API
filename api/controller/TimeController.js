@@ -14,15 +14,16 @@ exports.createTime = async (req, res, next) => {
   try {
    // transaction = await sequelize.transaction();
     if (times.length > 0) {
+      
       times.map(async (time) => {
         result = await Time.create({
           car_id: time.car_id,
           time_out: time.time_out,
-          date: time.date
+          date:time.date
         });
       });
       //await transaction.commit();
-      res.status(201).json(result);
+      res.status(201).json({"messages" : "create times success"});
     }
   }
   catch (e) {
@@ -121,7 +122,19 @@ exports.getTimeByPortId = async (req, res, next) => {
       }
     ]
   }).then(result => {
-    res.json(result);
+    const dateTimeCurrent = moment(new Date());
+    let timesRes = [];
+    let time = null;
+    result.map((_time,index) => {
+       time = moment(new Date(dateWhere + " " + _time.time_out));
+       let diff = dateTimeCurrent.diff(time,'minutes');
+       console.log(diff);
+       if(diff <= -10){
+          timesRes.push(_time);
+       }
+    })
+    
+    res.status(200).json(timesRes);
   });
 }
 
