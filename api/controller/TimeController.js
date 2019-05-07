@@ -158,13 +158,12 @@ exports.getTimeByPortId = async (req, res, next) => {
     result.map((_time,index) => {
        time = moment(new Date(dateWhere + " " + _time.time_out));
        let diff = dateTimeCurrent.diff(time,'minutes');
-       console.log(diff);
        if(diff <= -10){
           timesRes.push(_time);
        }
     })
     
-    res.status(200).json(timesRes);
+    req.auth.type_user === "ADMIN" ? result : res.status(200).json(timesRes);
   });
 }
 
