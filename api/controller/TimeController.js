@@ -14,15 +14,16 @@ exports.createTime = async (req, res, next) => {
   try {
    // transaction = await sequelize.transaction();
     if (times.length > 0) {
+      
       times.map(async (time) => {
         result = await Time.create({
           car_id: time.car_id,
           time_out: time.time_out,
-          date: time.date
+          date:time.date
         });
       });
       //await transaction.commit();
-      res.status(201).json(result);
+      res.status(201).json({"messages" : "create times success"});
     }
   }
   catch (e) {
@@ -55,6 +56,36 @@ exports.deleteTime = async (req, res, next) => {
     await transaction.rollback();
     next(e);
   }
+  if (result > 0) {
+    res.status(200).json(`delete success rows : ${result}`);
+  }
+  else {
+    res.status(204).json(`delete success rows : ${result}`);
+  }
+}
+
+exports.deleteTimeByDateAndByPort = async (req, res, next) => {
+  let transaction;
+  const dateWhere = moment(new Date(req.params.date)).format('YYYY-MM-DD');
+  const port_id = req.params.port_id;
+  let result = null;
+  try {
+    transaction = await sequelize.transaction();
+
+    result = await Time.destroy(
+      {
+        where: {
+          date: dateWhere,
+          port_id : port_id
+        }, transaction
+      });
+
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    next(e);
+  }
+
   if (result > 0) {
     res.status(200).json(`delete success rows : ${result}`);
   }
@@ -121,7 +152,19 @@ exports.getTimeByPortId = async (req, res, next) => {
       }
     ]
   }).then(result => {
-    res.json(result);
+    const dateTimeCurrent = moment(new Date());
+    let timesRes = [];
+    let time = null;
+    result.map((_time,index) => {
+       time = moment(new Date(dateWhere + " " + _time.time_out));
+       let diff = dateTimeCurrent.diff(time,'minutes');
+       console.log(diff);
+       if(diff <= -10){
+          timesRes.push(_time);
+       }
+    })
+    
+    res.status(200).json(timesRes);
   });
 }
 

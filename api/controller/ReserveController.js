@@ -20,11 +20,22 @@ exports.createReserve = async (req, res, next) => {
                                           INNER JOIN Port ON Port.port_id = Car.port_id
                                           WHERE Time.time_id = ?`, { replacements: [req.body.time_id], type: sequelize.QueryTypes.SELECT });
         if (port.count_seat < port.number_of_seats) {
-                result = await Reserve.create({
-                    time_id: time_id,
-                    user_id: req.auth.user_id,
-                    destination: destination,
-                }, { transaction });
+                if(req.auth.type_user !== "ADMIN"){
+                    result = await Reserve.create({
+                        time_id: time_id,
+                        user_id: req.auth.user_id,
+                        destination: destination,
+                    }, { transaction });
+                }
+                else{
+                    result = await Reserve.create({
+                        time_id: time_id,
+                        user_id: req.auth.user_id,
+                        destination: destination,
+                        phoneNumberWalkIn : phoneNumberWalkIn,
+                        nameWalkIn : nameWalkIn,
+                    }, { transaction });
+                }
 
                 updateTime = await Time.update(
                     { count_seat: ++port.count_seat },
@@ -195,8 +206,8 @@ exports.getReserveByPort = async (req, res, next) => {
         include: [
             {
                 model: Time,
-                attributes: ['time_id'],
-                required: true,
+                attributes: ['time_id','time_out'],
+                required: false,
                 include: [
                     {
                         model: Car,
