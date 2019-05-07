@@ -64,6 +64,36 @@ exports.deleteTime = async (req, res, next) => {
   }
 }
 
+exports.deleteTimeByDateAndByPort = async (req, res, next) => {
+  let transaction;
+  const dateWhere = moment(new Date(req.params.date)).format('YYYY-MM-DD');
+  const port_id = req.params.port_id;
+  let result = null;
+  try {
+    transaction = await sequelize.transaction();
+
+    result = await Time.destroy(
+      {
+        where: {
+          date: dateWhere,
+          port_id : port_id
+        }, transaction
+      });
+
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    next(e);
+  }
+
+  if (result > 0) {
+    res.status(200).json(`delete success rows : ${result}`);
+  }
+  else {
+    res.status(204).json(`delete success rows : ${result}`);
+  }
+}
+
 exports.deleteTimeByDate = async (req, res, next) => {
   let transaction;
   const dateWhere = moment(new Date(req.params.date)).format('YYYY-MM-DD');
