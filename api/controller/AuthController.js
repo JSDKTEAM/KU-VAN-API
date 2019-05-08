@@ -45,5 +45,7 @@ exports.login = async (req, res, next) => {
         }
     }
 
-    next({ message: "username or password not corrent", status: 401 })
+    return res.status(401).json({
+        message: "username or password not corrent"
+    });
 }
