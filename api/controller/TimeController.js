@@ -94,12 +94,8 @@ exports.deleteTimeByDateAndByPort = async (req, res, next) => {
     next(e);
   }
 
-  if (result > 0) {
-    res.status(200).json({"messages":`delete times success`});
-  }
-  else {
-    res.status(500).json({"messages":`delete times error`});
-  }
+  res.status(200).json({"messages":`delete times success result : ${result}`});
+  
 }
 
 exports.deleteTimeByDate = async (req, res, next) => {
