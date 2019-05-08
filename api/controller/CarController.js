@@ -38,7 +38,7 @@ exports.createCarByPortId = async (req, res, next) => {
         await transaction.rollback();
         console.log(e);
     }
-    res.json(result);
+    res.status(201).json(result);
 }
 
 
@@ -57,12 +57,17 @@ exports.updateCar = async (req, res, next) => {
                 transaction
             });
         await transaction.commit();
-        res.json(result);
     } catch (e) {
         await transaction.rollback();
         console.log(e);
     }
-    res.json(result);
+
+    if(result[0]){
+        res.status(200).json({"messages" : "update car success"});
+    }
+    else{
+        res.status(500).json({"messages" : "update car error"});
+    }
 }
 
 exports.deleteCar = async (req, res, next) => {
@@ -75,10 +80,14 @@ exports.deleteCar = async (req, res, next) => {
             where: { car_id: car_id },
         }, { transaction });
         await transaction.commit();
-        res.json(result);
     } catch (e) {
         await transaction.rollback();
         console.log(e);
     }
-    res.json(result);
+    if(result > 0){
+        res.status(200).json({"messages" : "delete car success"});
+    }
+    else{
+        res.status(500).json({"messages" : "delete car error"});
+    }
 }

@@ -60,7 +60,7 @@ exports.deleteTime = async (req, res, next) => {
     res.status(200).json(`delete success rows : ${result}`);
   }
   else {
-    res.status(204).json(`delete success rows : ${result}`);
+    res.status(500).json(`delete success rows : ${result}`);
   }
 }
 
@@ -76,8 +76,16 @@ exports.deleteTimeByDateAndByPort = async (req, res, next) => {
       {
         where: {
           date: dateWhere,
-          port_id : port_id
-        }, transaction
+        },
+        include: [
+          {
+            model: Car,
+            where: {
+              port_id : port_id
+            },
+          }
+        ]
+        , transaction
       });
 
     await transaction.commit();
@@ -87,10 +95,10 @@ exports.deleteTimeByDateAndByPort = async (req, res, next) => {
   }
 
   if (result > 0) {
-    res.status(200).json(`delete success rows : ${result}`);
+    res.status(200).json({"messages":`delete times success`});
   }
   else {
-    res.status(204).json(`delete success rows : ${result}`);
+    res.status(500).json({"messages":`delete times error`});
   }
 }
 
