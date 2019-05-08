@@ -21,6 +21,7 @@ exports.login = async (req, res, next) => {
         where: { username: req.body.username },
     });
 
+    console.log(user);
 
     if (user) {
 
