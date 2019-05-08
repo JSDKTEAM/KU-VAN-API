@@ -219,7 +219,7 @@ exports.getReserveByPort = async (req, res, next) => {
             },
             {
                 model: User,
-                attributes: ['user_id', 'username', 'fname', 'lname'],
+                attributes: ['user_id', 'username', 'fname', 'lname','phoneNumber'],
             },
         ],
     }).then(result => {
