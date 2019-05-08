@@ -23,7 +23,7 @@ exports.register = async(req,res,next) => {
         await transaction.rollback();
     }
     if(result){
-        res.json({'message':"Register success"});
+        res.status(201).json({'message':"Register success"});
     }
-    res.json({'message':"Register fail"});
+    res.status(500).json({'message':"Register fail"});
 }
