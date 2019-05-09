@@ -12,18 +12,18 @@ exports.createTime = async (req, res, next) => {
   let result = null;
   //let transaction;
   try {
-   // transaction = await sequelize.transaction();
+    // transaction = await sequelize.transaction();
     if (times.length > 0) {
-      
+
       times.map(async (time) => {
         result = await Time.create({
           car_id: time.car_id,
           time_out: time.time_out,
-          date:time.date
+          date: time.date
         });
       });
       //await transaction.commit();
-      res.status(201).json({"messages" : "create times success"});
+      res.status(201).json({ "messages": "create times success" });
     }
   }
   catch (e) {
@@ -66,13 +66,16 @@ exports.deleteTime = async (req, res, next) => {
 
 exports.deleteTimeByDateAndByPort = async (req, res, next) => {
   let transaction;
+  Time.belongsTo(Car, { foreignKey: 'car_id' })
+  Car.belongsTo(Port, { foreignKey: 'port_id' })
   const dateWhere = moment(new Date(req.params.date)).format('YYYY-MM-DD');
   const port_id = req.params.port_id;
   let result = null;
+  let resultDelete = null;
   try {
     transaction = await sequelize.transaction();
 
-    result = await Time.destroy(
+    result = await Time.findAll(
       {
         where: {
           date: dateWhere,
@@ -81,12 +84,28 @@ exports.deleteTimeByDateAndByPort = async (req, res, next) => {
           {
             model: Car,
             where: {
-              port_id : port_id
+              port_id: port_id
             },
           }
         ]
         , transaction
       });
+
+    if (result) {
+      let listDelete = [];
+      result.map((_time, index) => {
+        listDelete.push(_time.time_id);
+      })
+
+      resultDelete = Time.destroy(
+        {
+          where: {
+            time_id: listDelete,
+          }
+      });
+
+      res.status(200).json({ "messages": `delete times success` });
+    }
 
     await transaction.commit();
   } catch (e) {
@@ -94,8 +113,8 @@ exports.deleteTimeByDateAndByPort = async (req, res, next) => {
     next(e);
   }
 
-  res.status(200).json({"messages":`delete times success result : ${result}`});
   
+
 }
 
 exports.deleteTimeByDate = async (req, res, next) => {
@@ -166,8 +185,8 @@ exports.getTimeByPortId = async (req, res, next) => {
     //       timesRes.push(_time);
     //    }
     // })
-  
-   res.status(200).json(result);
+
+    res.status(200).json(result);
   });
 }
 
