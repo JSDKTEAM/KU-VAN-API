@@ -21,8 +21,6 @@ exports.login = async (req, res, next) => {
         where: { username: req.body.username },
     });
 
-    console.log(user);
-
     if (user) {
 
         let { user_id, username, password, type_user } = user.dataValues;
