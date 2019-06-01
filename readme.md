@@ -1,4 +1,4 @@
-# KU VAN API
+# KU VAN API ระบบบริการจองรถตู้ภายในมหาลัยเกษตรศาสตร์ วิทยาเขตกําแพงแสน
 ## Set Up database
 1. เพิ่ม Database ใน xampp เลือก utf8-general_ci
 2. ไปที่ config/config.example.json copy ไฟล์ config.example.json (ห้ามลบ) แล้วเปลี่ยนชื่อเป็น config.json   แก้ "database" ใน "development" เป็นชื่อ database ที่สร้างไว้
